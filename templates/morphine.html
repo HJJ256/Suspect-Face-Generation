@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% static "images" as baseUrl %}
+
+
+	
+<style type="text/css">
+body {
+    color: black;
+    }
+
+.main_section{
+width: 75%;
+height: 85%;
+position: absolute;
+  top: 10%;
+  left: 10%;
+border-style: inset;
+border-color: black;
+}
+
+.image_section{
+text-align: left;
+width: 48.7%;
+height: 91.2%;
+float: left;
+margin-left: 2%;
+margin-top: 2%;
+border-style: solid;
+border-color: black;
+}
+
+.image_for_morphing{
+width: 100%;
+}
+    #header {
+  text-align: center;
+}
+.feature_section{
+float: left;
+width: 45%;
+height: 90%;
+margin-top: 2%;
+margin-left: 2%;
+}
+
+.individual_features{
+border-style: solid;
+width: 31.22%;
+height: 11.58%;
+border-color: black;
+float: left;
+margin-right: 7.5px;
+margin-bottom: 7.5px;
+font-size: 25px;
+}
+
+.feature_name {
+height: 50%;
+width: 100%;
+text-align: center;
+border-style: solid;
+border-bottom-width: 3px;
+border-top-width: 0px;
+border-right-width: 0px;
+border-left-width: 0px;
+border-color: black;
+}
+.minus_plus_section{
+height: 50%;
+font-weight: bold;
+}
+
+.form_content{
+height: 100%;
+width: 50%;
+float: left;
+position: relative;
+}
+
+.minus{
+width: 45%;
+height: 100%;
+float: left;
+text-align: center;
+border-style: solid;
+border-bottom-width: 0px;
+border-top-width: 0px;
+border-right-width: 2px;
+border-left-width: 0px;
+border-color: black;
+font-size: 30px;
+color: red;
+background-color: red;
+}
+.plus{
+width: 45%;
+height: 75%;
+float: left;
+text-align: center;
+border-style: solid;
+border-bottom-width: 2px;
+border-top-width: 2px;
+border-right-width: 2px;
+border-left-width: 2px;
+border-color: black;
+font-size: 30px;
+padding-top: 2px;
+}
+
+
+input[type=submit]{
+ border: none;
+ color: white;
+ font-size: x-large;
+ color: black;
+ cursor: pointer;
+ align-self: center;
+}
+
+
+</style>
+
+
+<div class = "main_section">
+	<div class="image_section">
+		<iframe src="image" height="100%" width="100%" id="image1"></iframe>
+		<!--img src="{{img_dat.photo.url}}" height="100%" width="100%" id="image1"-->
+	</div> 
+	<div class="feature_section">	
+		{{papa}}
+		<br>
+		{% for i in morph_features %}
+
+		<div class="individual_features" >
+			
+			<div class="feature_name" > 
+				<form action="morphine" class="form-content" method="POST" id="ajax_feat{{forloop.counter}}" >
+					{% csrf_token %}
+
+					<input type="submit" name="feat" value="{{i}}" id="feat{{forloop.counter}}" class="feat" style="height: 100%; width: 100%; background-color: white; ">
+					
+					<!--<input type="checkbox" name="feat{{forloop.counter}}" id="feat{{forloop.counter}}" value="{{i}}" onChange="this.form.submit()">
+  					<label for="feat{{forloop.counter}}"> {{i}}</label><br>-->
+
+					
+				</form>	
+			</div>
+			<div class="minus_plus_section">
+				<form action="morphine" class="form_content" method="POST" id="ajax_plus{{forloop.counter}}">
+					{% csrf_token %}
+
+					<button type="submit" name="plus" value="+" id="plus{{forloop.counter}}" class="plus" style="height: 100%; width: 100%; background-color: white; border-color: black;border-style: solid; border-width: 2px; position: absolute">+</button>
+					
+				</form>
+
+				<form action="morphine" class="form_content" method="POST" id="ajax_minus{{forloop.counter}}">
+					{% csrf_token %}
+
+					<button type="submit" name="minus" value="-" id="minus{{forloop.counter}}" class="plus" style="height: 100%; width: 100%; background-color: white; border-color: black; border-style: solid; border-width: 2px; position: absolute ">-</button>
+				</form>
+			</div>
+		</div>
+
+		{% endfor %}
+	</div>
+</div>
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	
+	//var ajax_image = "<img src='/media/tmp.png' alt='Loading...' class='image_for_morphing' id= 'new' />";
+	// x= ['0','1','2','3','4']
+	// y = ['minus0','minus1','minus2','minus3','minus4']
+	
+	// data = {}
+	// i = 0
+	// data[y[i]] = $('#' + y[i]).val()
+	// data['csrfmiddlewaretoken'] = $('input[ name = csrfmiddlewaretoken]').val()
+	
+	function reload(){
+		document.getElementById('image1').contentWindow.location.reload(true);
+	}
+
+	function changeColor(i){
+		if(document.getElementById(i).style.backgroundColor == "gray"){
+			document.getElementById(i).style.backgroundColor = "white"
+		}
+		else{
+			document.getElementById(i).style.backgroundColor = "gray";
+		}
+	}
+
+$(document).on('submit', '#ajax_minus1 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus1: $('#minus1').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus1',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus1: $('#plus1').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat1 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat1: $('#feat1').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){  reload();changeColor("feat1"); } }) })
+ 
+$(document).on('submit', '#ajax_minus2 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus2: $('#minus2').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus2',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus2: $('#plus2').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat2 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat2: $('#feat2').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload();changeColor("feat2"); } }) })
+ 
+$(document).on('submit', '#ajax_minus3 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus3: $('#minus3').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus3',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus3: $('#plus3').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat3 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat3: $('#feat3').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat3");} }) })
+ 
+$(document).on('submit', '#ajax_minus4 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus4: $('#minus4').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus4',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus4: $('#plus4').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat4 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat4: $('#feat4').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat4");} }) })
+ 
+$(document).on('submit', '#ajax_minus5 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus5: $('#minus5').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus5',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus5: $('#plus5').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat5 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat5: $('#feat5').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat5");} }) })
+ 
+$(document).on('submit', '#ajax_minus6 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus6: $('#minus6').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus6',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus6: $('#plus6').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat6 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat6: $('#feat6').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat6");} }) })
+ 
+$(document).on('submit', '#ajax_minus7 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus7: $('#minus7').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus7',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus7: $('#plus7').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat7 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat7: $('#feat7').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat7");} }) })
+ 
+$(document).on('submit', '#ajax_minus8 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus8: $('#minus8').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus8',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus8: $('#plus8').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat8 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat8: $('#feat8').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat8");} }) })
+ 
+$(document).on('submit', '#ajax_minus9 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus9: $('#minus9').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus9',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus9: $('#plus9').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat9 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat9: $('#feat9').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat9");} }) })
+ 
+$(document).on('submit', '#ajax_minus10 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus10: $('#minus10').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus10',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus10: $('#plus10').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat10 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat10: $('#feat10').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat10");} }) })
+ 
+$(document).on('submit', '#ajax_minus11 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus11: $('#minus11').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus11',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus11: $('#plus11').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat11 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat11: $('#feat11').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat11");} }) })
+ 
+$(document).on('submit', '#ajax_minus12 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus12: $('#minus12').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus12',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus12: $('#plus12').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat12 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat12: $('#feat12').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat12");} }) })
+ 
+$(document).on('submit', '#ajax_minus13 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus13: $('#minus13').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus13',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus13: $('#plus13').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat13 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat13: $('#feat13').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat13");} }) })
+ 
+$(document).on('submit', '#ajax_minus14 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus14: $('#minus14').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus14',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus14: $('#plus14').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat14 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat14: $('#feat14').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat14");} }) })
+ 
+$(document).on('submit', '#ajax_minus15 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus15: $('#minus15').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus15',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus15: $('#plus15').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat15 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat15: $('#feat15').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat15");} }) })
+ 
+$(document).on('submit', '#ajax_minus16 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus16: $('#minus16').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus16',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus16: $('#plus16').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat16 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat16: $('#feat16').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat16");} }) })
+ 
+$(document).on('submit', '#ajax_minus17 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus17: $('#minus17').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus17',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus17: $('#plus17').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat17 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat17: $('#feat17').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat17");} }) })
+ 
+$(document).on('submit', '#ajax_minus18 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus18: $('#minus18').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus18',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus18: $('#plus18').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat18 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat18: $('#feat18').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat18");} }) })
+ 
+$(document).on('submit', '#ajax_minus19 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus19: $('#minus19').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus19',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus19: $('#plus19').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat19 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat19: $('#feat19').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat19");} }) })
+ 
+$(document).on('submit', '#ajax_minus20 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus20: $('#minus20').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus20',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus20: $('#plus20').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat20 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat20: $('#feat20').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat20");} }) })
+ 
+$(document).on('submit', '#ajax_minus21 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ minus21: $('#minus21').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){   reload(); } }) })
+ $(document).on('submit', '#ajax_plus21',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ plus21: $('#plus21').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); } }) })
+ $(document).on('submit', '#ajax_feat21 ',function(e){ e.preventDefault(); $.ajax({ type : 'POST', url : 'morphine', data:{ feat21: $('#feat21').val(), csrfmiddlewaretoken : $('input[ name = csrfmiddlewaretoken]').val() }, success: function(){ reload(); changeColor("feat21");} }) })
+
+	
+</script>
+
+{% endblock %}
+

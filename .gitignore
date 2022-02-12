@@ -1,0 +1,9 @@
+asset_results/*
+asset_model/*
+assets/admin/*
+assets/images/*
+dnnlib
+media/*
+celeba_hq_dataset.csv
+celeba_hq_dataset_old.csv
+db.sqlite3

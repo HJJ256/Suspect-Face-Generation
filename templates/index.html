@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<style type="text/css">
+  .save-btn {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 25px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+</style>
+
+<form action="after_male" class="form-content" method="POST">
+  {% csrf_token %}
+  <div class = "question_section">
+    Is the suspect Male?
+  </div>
+  <div class="switch">
+    <input type="radio" class="switch-input" name="male" value="yes" id="x1" checked>
+    <label for="x1" class="switch-label switch-label-off">Yes</label>
+    <input type="radio" class="switch-input" name="male" value="no" id="x2">
+    <label for="x2" class="switch-label switch-label-on">No</label>
+    <span class="switch-selection"></span>
+  </div>
+  <input type="submit" class="save-btn" value="Next">
+</form>
+
+{% endblock %}

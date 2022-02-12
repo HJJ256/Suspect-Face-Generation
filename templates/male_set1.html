@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style type="text/css">
+    .save-btn {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 10px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 25px;
+        margin: 4px 2px;
+        cursor: pointer;
+      }
+</style>
+<form action="male_set2" class="form-content" method="POST">
+    {% csrf_token %}
+
+<h1>Male set 1  </h1>
+<table class="table-ques">
+{% for question in features %}
+
+<tr>
+    {% if question in is_ones %}
+        <td class="ques-sec">Is the suspect {{question}}</td>
+    {% else %}
+        <td class="ques-sec">Does the suspect has {{question}}</td>
+    {% endif %}
+    <td class="ques-sec">
+    
+    {% for answer in radcount %}
+        <input type="radio" name="{{ question }}"                                 
+        id="answer{{ answer}}" value="{{ answer }}" checked/>
+        <label for="answer{{ answer }}">{{ answer }}</label>                                                                
+    {% endfor %}
+    <br>
+    </td>
+</tr>
+
+{% endfor %}
+</table>
+
+<!--
+<table class="table-ques">
+
+{% for i in features %}
+
+<tr>
+    <td class="ques-sec">Does the suspect has {{i}}</td>
+    <td>
+        <div class="switch">
+            <input type="radio" class="switch-input" name= {{i}} value="yes" id="x1" checked>
+            <label for="x1" class="switch-label switch-label-off">Yes</label>
+            <input type="radio" class="switch-input" name= {{i}} value="no" id="x2">
+            <label for="x2" class="switch-label switch-label-on">No</label>
+            <span class="switch-selection"></span>
+        </div> 
+    </td>
+</tr>
+
+{% endfor %}
+</table>
+-->
+<input type="submit" class="save-btn" value="Next">
+</form>
+{% endblock %}

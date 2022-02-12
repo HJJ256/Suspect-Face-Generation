@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% static "images" as baseUrl %}
+
+
+
+
+<h1>Introduction</h1>
+
+
+
+
+
+<body>
+	<form action="edit"  method="POST">
+
+		{% csrf_token %}
+		<img src="{{baseUrl}}/{{val}}" width="300" id="img1">
+		<input type="submit" value="abc" id="abc">
+	
+	</form>
+	
+</body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+{% endblock %}
